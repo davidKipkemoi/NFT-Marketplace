@@ -1,0 +1,11 @@
+# Ignore node_modules and build artifacts
+node_modules/
+cache/
+artifacts/
+
+# Ignore test report files
+coverage/
+coverage.json
+
+# Ignore specific files
+.env 
