@@ -4,7 +4,6 @@ import Section from '../ui/Section';
 import SectionTitle from '../ui/SectionTitle';
 import ArtistCard from '../ui/ArtistCard';
 import CardSkeleton from '../ui/CardSkeleton';
-import image1 from "../../../public/images/artists/image1.jpg"
 import ArtworkModal from '../ui/ArtworkModal';
 import axios from 'axios'; // Import axios
 

@@ -1,10 +1,8 @@
-// Removed jsonwebtoken import - using Supabase auth instead
-// const jwt = require('jsonwebtoken');
-// Removed JWT_SECRET import - not needed with Supabase auth
-// const { JWT_SECRET } = require('../index');
+const jwt = require('jsonwebtoken'); // Import jsonwebtoken (needed for now, although we use Supabase session)
 
-// Import supabase client
-const { supabase } = require('../index'); // Import supabase
+// Import supabase client from index.js
+// const { supabase } = require('../../index'); // Removed old import
+const { supabase } = require('../supabaseClient'); // Import from new file
 
 const authenticateToken = async (req, res, next) => { // Made middleware async
   // Get token from header

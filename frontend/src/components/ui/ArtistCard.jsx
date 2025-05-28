@@ -60,7 +60,7 @@ const ArtistCard = React.memo(({ artist, index, isHovering, onHover, onQuickPrev
                         whileHover={{ scale: 1.1 }}
                     >
                         <img
-                            src={artist.avatar || `https://placehold.co/100/475569/cbd5e1.png?text=${artist.name.split(' ').map(n => n[0]).join('')}`}
+                            src={artist.avatar || `https://placehold.co/100/475569/cbd5e1.png?text=${artist.name ? artist.name.split(' ').map(n => n[0]).join('') : 'Artist'}`}
                             alt={`${artist.name}'s avatar`}
                             className="w-full h-full object-cover"
                             loading="lazy"

@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useState } from 'react'
 import { HelmetProvider } from 'react-helmet-async'
 import Landing from './components/Landing'
 import { CursorProvider } from './context/CursorContext'

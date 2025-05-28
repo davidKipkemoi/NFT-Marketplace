@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useWeb3 } from '../../context/Web3Context';
 import Button from './Button';
@@ -14,6 +14,31 @@ const ConnectWalletButton = ({ variant = 'primary', size = 'medium', className =
     disconnectWallet,
     isNetworkValid
   } = useWeb3();
+
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const timeoutRef = useRef(null);
+
+  useEffect(() => {
+    // Clear timeout when component unmounts
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setIsDropdownVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsDropdownVisible(false);
+    }, 100); // Small delay (e.g., 100ms)
+  };
 
   // If not connected, show connect wallet button
   if (!active || !account) {
@@ -46,7 +71,11 @@ const ConnectWalletButton = ({ variant = 'primary', size = 'medium', className =
 
   // If connected, show address and disconnect option
   return (
-    <div className="relative group">
+    <div 
+      className="relative inline-block"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <Button
         variant={variant}
         size={size}
@@ -56,19 +85,21 @@ const ConnectWalletButton = ({ variant = 'primary', size = 'medium', className =
         {formatAddress(account)}
       </Button>
       
-      <motion.div 
-        className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-slate-800 ring-1 ring-black ring-opacity-5 p-1 hidden group-hover:block z-10"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-      >
-        <button 
-          className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-slate-700 rounded-md"
-          onClick={disconnectWallet}
+      {isDropdownVisible && (
+        <motion.div 
+          className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-slate-800 ring-1 ring-black ring-opacity-5 p-1 z-10"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
         >
-          Disconnect Wallet
-        </button>
-      </motion.div>
+          <button 
+            className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-slate-700 rounded-md"
+            onClick={disconnectWallet}
+          >
+            Disconnect Wallet
+          </button>
+        </motion.div>
+      )}
     </div>
   );
 };
