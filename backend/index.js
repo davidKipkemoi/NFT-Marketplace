@@ -5,6 +5,9 @@ const { createPublicClient, http } = require('viem'); // Import Viem client and 
 const marketplaceRoutes = require('./src/routes/marketplaceRoutes'); // Import marketplace routes
 const authRoutes = require('./src/routes/authRoutes'); // Import authentication routes
 
+// Import Supabase client
+const { createClient } = require('@supabase/supabase-js');
+
 dotenv.config(); // Load environment variables from .env file
 
 const app = express();
@@ -15,6 +18,10 @@ const port = process.env.PORT || 5000; // Use port 5000 or environment variable
 const RPC_URL = process.env.RPC_URL; // Get RPC URL from environment variables
 const JWT_SECRET = process.env.JWT_SECRET; // Get JWT Secret from environment variables
 
+// Get Supabase credentials from environment variables
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+
 if (!RPC_URL) {
   console.error("FATAL ERROR: RPC_URL not found in environment variables.");
   process.exit(1);
@@ -24,6 +31,15 @@ if (!JWT_SECRET) {
     console.error("FATAL ERROR: JWT_SECRET not found in environment variables.");
     process.exit(1);
 }
+
+// Check for Supabase environment variables
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.error("FATAL ERROR: Supabase URL or Anon Key not found in environment variables.");
+    process.exit(1);
+}
+
+// Initialize Supabase client
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const publicClient = createPublicClient({
   transport: http(RPC_URL),
@@ -54,8 +70,8 @@ app.listen(port, () => {
   console.log(`Backend server listening at http://localhost:${port}`);
 });
 
-// Export publicClient for use in other modules (e.g., route handlers)
-module.exports = { app, publicClient, JWT_SECRET }; // Export JWT_SECRET as well
+// Export publicClient and supabase for use in other modules
+module.exports = { app, publicClient, JWT_SECRET, supabase }; // Export supabase client
 
 // You can now use 'publicClient' to interact with the blockchain, e.g.,
 // async function getBlockNumber() {
