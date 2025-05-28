@@ -6,57 +6,33 @@ import ArtistCard from '../ui/ArtistCard';
 import CardSkeleton from '../ui/CardSkeleton';
 import image1 from "../../../public/images/artists/image1.jpg"
 import ArtworkModal from '../ui/ArtworkModal';
+import axios from 'axios'; // Import axios
 
 const ArtistsShowcaseSection = () => {
     const [isHovering, setIsHovering] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [artists, setArtists] = useState([]);
+    const [artists, setArtists] = useState([]); // Renaming state to listings for clarity
     const [selectedArtist, setSelectedArtist] = useState(null);
 
-    // Simulating data fetching from an API
+    // Fetch NFT listings from backend API
     useEffect(() => {
-        // In a real application, this would be an API call
-        const fetchArtists = async () => {
+        const fetchListings = async () => {
             setIsLoading(true);
             try {
-                // Simulate API delay
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                // Mock data - in a real app, this would come from an API
-                const data = [
-                    {
-                        name: "Elena Rodriguez",
-                        style: "Surrealism & Digital Art",
-                        price: "2.5 ETH",
-                        image:   image1,// Artwork image
-                        avatar: "/images/avatars/elena-rodriguez.jpg"  // Artist avatar
-                    },
-                    {
-                        name: "Marcus Chen",
-                        style: "Generative Art",
-                        price: "1.8 ETH",
-                        image: image1, // Artwork image
-                        avatar: "/images/avatars/elena-rodriguez.jpg"  // Artist avatar
-                    },
-                    {
-                        name: "Sarah Johnson",
-                        style: "Abstract & Digital Sculpture",
-                        price: "3.2 ETH",
-                        image: image1, // Artwork image
-                        avatar: "/images/avatars/elena-rodriguez.jpg"  // Artist avatar
-                    }
-                ];
-                
-                setArtists(data);
+                // Make GET request to backend listings endpoint
+                const response = await axios.get('http://localhost:5000/api/marketplace/listings');
+                // Assuming backend returns an array of listing objects
+                // The current backend mock data structure matches the artist structure, so we can use it directly for now
+                setArtists(response.data); // Use setArtists for now, will rename later if needed
             } catch (error) {
-                console.error("Error fetching artists:", error);
+                console.error("Error fetching listings:", error);
                 // Would handle error states here
             } finally {
                 setIsLoading(false);
             }
         };
 
-        fetchArtists();
+        fetchListings();
     }, []);
 
 
@@ -89,22 +65,23 @@ const ArtistsShowcaseSection = () => {
                         <CardSkeleton key={index} />
                     ))
                 ) : (
-                    // Show artist cards when loaded
-                    artists.map((artist, index) => (
+                    // Show artist cards when loaded (now displaying listings)
+                    artists.map((listing, index) => (
                         <ArtistCard 
                             key={index} 
-                            artist={artist} 
+                            // Pass listing data to ArtistCard
+                            artist={listing} // Passing listing data as 'artist' for now
                             index={index} 
                             isHovering={isHovering} 
                             onHover={setIsHovering} 
-                            onQuickPreview={setSelectedArtist}
+                            onQuickPreview={setSelectedArtist} // setSelectedArtist will receive listing data
                         />
                     ))
                 )}
             </div>
             {selectedArtist && (
                 <ArtworkModal 
-                    artist={selectedArtist} 
+                    artist={selectedArtist} // ArtworkModal will receive listing data
                     onClose={handleCloseModal} 
                 />
             )}
