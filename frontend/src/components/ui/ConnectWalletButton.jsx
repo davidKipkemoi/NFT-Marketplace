@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useWeb3 } from '../../context/Web3Context';
-import Button from './Button';
+import CustomButton from './CustomButton';
 
 const ConnectWalletButton = ({ variant = 'primary', size = 'medium', className = '' }) => {
   const { 
@@ -43,7 +43,7 @@ const ConnectWalletButton = ({ variant = 'primary', size = 'medium', className =
   // If not connected, show connect wallet button
   if (!active || !account) {
     return (
-      <Button
+      <CustomButton
         variant={variant}
         size={size}
         className={className}
@@ -51,21 +51,21 @@ const ConnectWalletButton = ({ variant = 'primary', size = 'medium', className =
         disabled={isConnecting}
       >
         {isConnecting ? 'Connecting...' : 'Connect Wallet'}
-      </Button>
+      </CustomButton>
     );
   }
 
   // If connected to wrong network, show warning
   if (!isNetworkValid()) {
     return (
-      <Button
+      <CustomButton
         variant="danger"
         size={size}
         className={className}
         onClick={() => window.ethereum?.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x1' }] })}
       >
         Switch to Mainnet
-      </Button>
+      </CustomButton>
     );
   }
 
@@ -76,14 +76,14 @@ const ConnectWalletButton = ({ variant = 'primary', size = 'medium', className =
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <Button
+      <CustomButton
         variant={variant}
         size={size}
         className={`${className} flex items-center gap-2`}
       >
         <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
         {formatAddress(account)}
-      </Button>
+      </CustomButton>
       
       {isDropdownVisible && (
         <motion.div 

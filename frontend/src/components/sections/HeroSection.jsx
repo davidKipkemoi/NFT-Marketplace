@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { fadeInUp, staggerChildren } from '../../data/animationVariants';
 import { useCursor } from '../../context/CursorContext';
-import Button from '../ui/Button';
+import CustomButton from '../ui/CustomButton';
 
 const BackgroundShapes = () => (
   <motion.div 
@@ -109,19 +109,19 @@ const HeroSection = () => {
           className="flex flex-wrap gap-4"
           variants={fadeInUp}
         >
-          <Button 
+          <CustomButton 
             variant="secondary" 
             onMouseEnter={() => enterHover("button")}
             onMouseLeave={leaveHover}
           >
             Explore Collections
-          </Button>
-          <Button 
+          </CustomButton>
+          <CustomButton 
             onMouseEnter={() => enterHover("button")}
             onMouseLeave={leaveHover}
           >
             Showcase Your Work
-          </Button>
+          </CustomButton>
         </motion.div>
       </motion.div>
 

@@ -10,9 +10,9 @@ import { AuthProvider } from './context/AuthContext'
 import AuthPage from './pages/AuthPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
-
-// Placeholder components for routes
-const DashboardPage = () => <div>Dashboard/Marketplace Page (Protected)</div>
+import { WalletAuthProvider } from './context/WalletAuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
+import DashboardPage from './pages/DashboardPage'
 
 function App() {
   return (
@@ -23,22 +23,28 @@ function App() {
           <ErrorBoundary>
             <Web3Provider>
               <CursorProvider>
-                <AuthProvider>
-                  <Routes>
-                    <Route
-                      path="/"
-                      element={
-                        <Suspense fallback={<div className="flex items-center justify-center min-h-screen bg-slate-900 text-white">Loading...</div>}>
-                          <Landing />
-                        </Suspense>
-                      }
-                    />
-                    <Route path="/auth" element={<AuthPage />} />
-                    <Route path="/auth/login" element={<LoginPage />} />
-                    <Route path="/auth/register" element={<RegisterPage />} />
-                    <Route path="/dashboard" element={<DashboardPage />} />
-                  </Routes>
-                </AuthProvider>
+                <WalletAuthProvider>
+                  <AuthProvider>
+                    <Routes>
+                      <Route
+                        path="/"
+                        element={
+                          <Suspense fallback={<div className="flex items-center justify-center min-h-screen bg-slate-900 text-white">Loading...</div>}>
+                            <Landing />
+                          </Suspense>
+                        }
+                      />
+                      <Route path="/auth" element={<AuthPage />} />
+                      <Route path="/auth/login" element={<LoginPage />} />
+                      <Route path="/auth/register" element={<RegisterPage />} />
+                      <Route path="/dashboard" element={
+                        <ProtectedRoute>
+                          <DashboardPage />
+                        </ProtectedRoute>
+                      } />
+                    </Routes>
+                  </AuthProvider>
+                </WalletAuthProvider>
               </CursorProvider>
             </Web3Provider>
           </ErrorBoundary>

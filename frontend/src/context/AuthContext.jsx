@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
              // Handle cases where data.session is null/undefined after setSession
              localStorage.removeItem('supabaseSession');
              setSession(null);
-          }I
+          }
         } catch (error) {
           console.error('Error parsing stored session:', error);
           localStorage.removeItem('supabaseSession');

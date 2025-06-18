@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken'); // Import jsonwebtoken (needed for now, although we use Supabase session)
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Import supabase client from index.js
 // const { supabase } = require('../../index'); // Removed old import
@@ -9,31 +10,27 @@ const authenticateToken = async (req, res, next) => { // Made middleware async
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Extract token from "Bearer TOKEN" format
 
-  if (token == null) {
-    // If no token, unauthorized
-    return res.sendStatus(401); // Unauthorized
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
   }
 
+  // Try to verify as a custom JWT (wallet user)
   try {
-    // Use Supabase auth.getUser to verify the token and get user information
-    const { data: { user }, error } = await supabase.auth.getUser(token);
-
-    if (error || !user) {
-      // If token is invalid or user not found, forbidden
-      console.error('Supabase auth.getUser error:', error?.message);
-      return res.sendStatus(403); // Forbidden
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    return next();
+  } catch (jwtError) {
+    // If JWT verification fails, try Supabase session verification (for email/password users)
+    try {
+      const { data: { user }, error } = await supabase.auth.getUser(token);
+      if (error || !user) {
+        return res.status(401).json({ message: 'Invalid token' });
+      }
+      req.user = user;
+      return next();
+    } catch (supabaseError) {
+      return res.status(401).json({ message: 'Invalid token' });
     }
-
-    // If token is valid and user found, add user information to the request object
-    req.user = user;
-    
-    // Proceed to the next middleware or route handler
-    next();
-
-  } catch (error) {
-    // Handle unexpected errors during token verification
-    console.error('Unexpected error verifying token with Supabase:', error);
-    res.sendStatus(500); // Internal server error
   }
 };
 

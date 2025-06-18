@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Button from './Button';
+import CustomButton from './CustomButton';
 
 describe('Button Component', () => {
   it('renders correctly with default props', () => {
-    render(<Button>Click Me</Button>);
+    render(<CustomButton>Click Me</CustomButton>);
     
     const buttonElement = screen.getByText('Click Me');
     expect(buttonElement).toBeInTheDocument();
@@ -13,7 +13,7 @@ describe('Button Component', () => {
   it('calls onClick handler when clicked', () => {
     const handleClick = jest.fn();
     
-    render(<Button onClick={handleClick}>Click Me</Button>);
+    render(<CustomButton onClick={handleClick}>Click Me</CustomButton>);
     
     const buttonElement = screen.getByText('Click Me');
     fireEvent.click(buttonElement);
@@ -22,14 +22,14 @@ describe('Button Component', () => {
   });
 
   it('renders with the right size class', () => {
-    render(<Button size="large">Large Button</Button>);
+    render(<CustomButton size="large">Large Button</CustomButton>);
     
     const buttonElement = screen.getByText('Large Button');
     expect(buttonElement).toHaveClass('text-lg');
   });
 
   it('renders with variant class', () => {
-    render(<Button variant="outline">Outline Button</Button>);
+    render(<CustomButton variant="outline">Outline Button</CustomButton>);
     
     const buttonElement = screen.getByText('Outline Button');
     expect(buttonElement).toHaveClass('border');

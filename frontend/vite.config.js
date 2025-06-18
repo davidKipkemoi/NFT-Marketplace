@@ -13,6 +13,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      "@": "/src",
       // Ensure proper resolution of web3 dependencies
       events: 'events',
       buffer: 'buffer',

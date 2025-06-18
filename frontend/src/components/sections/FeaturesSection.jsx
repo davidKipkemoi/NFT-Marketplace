@@ -4,7 +4,7 @@ import { features } from '../../data/staticData';
 import { scaleIn } from '../../data/animationVariants';
 import Section from '../ui/Section';
 import SectionTitle from '../ui/SectionTitle';
-import Card from '../ui/Card';
+import CustomCard from '../ui/CustomCard';
 import Icon from '../ui/Icon';
 
 const FeaturesSection = () => {
@@ -17,7 +17,7 @@ const FeaturesSection = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {features.map((feature, index) => (
-          <Card key={index} variants={scaleIn}>
+          <CustomCard key={index} variants={scaleIn}>
             <Icon path={feature.icon} />
             <h3 className="text-xl font-semibold mb-3 text-center">
               {feature.title}
@@ -25,7 +25,7 @@ const FeaturesSection = () => {
             <p className="text-slate-400 text-center leading-relaxed">
               {feature.description}
             </p>
-          </Card>
+          </CustomCard>
         ))}
       </div>
     </Section>
